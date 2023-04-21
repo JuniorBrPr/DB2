@@ -13,7 +13,7 @@ import nl.hva.ict.data.MySQL.*;
 
 /**
  * Main class met applicatie logica
- * @author HBO-ICT
+ * @author Junior Javier Brito Perez, 500906870
  */
 public class MainApplication extends Application {
 
@@ -21,8 +21,10 @@ public class MainApplication extends Application {
 
     //MySQL
     private static final String MYSQL_HOST = "jdbc:mysql://localhost:3306/big_five_safari?autoReconnect=true&serverTimezone=Europe/Amsterdam&useSSL=False";
-    private static final String MYSQL_USERNAME = "";  // vul hier je DB username in
-    private static final String MYSQL_PASSWORD = ""; // vul hier je DB wachtwoord in
+    //@todo : Change user creds
+    private static final String MYSQL_USERNAME = "root";  // vul hier je DB username in
+    //@todo : Change user creds
+     private static final String MYSQL_PASSWORD = "MySql15@"; // vul hier je DB wachtwoord in
 
     //Mongo NoSQL
     private static final String NOSQL_HOST = ""; // Vul hier je MongoDB gegevens in. Iets met mongodb+srv://......
