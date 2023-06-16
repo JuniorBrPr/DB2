@@ -20,11 +20,11 @@ public class MainApplication extends Application {
     private static final String TITLE = "Practicumopdracht DB2 - Startproject - versie 2022 ";
 
     //MySQL
-    private static final String MYSQL_HOST = "jdbc:mysql://localhost:3306/big_five_safari?autoReconnect=true&serverTimezone=Europe/Amsterdam&useSSL=False";
-    //@todo : Change user creds
-    private static final String MYSQL_USERNAME = "root";  // vul hier je DB username in
-    //@todo : Change user creds
-     private static final String MYSQL_PASSWORD = "MySql15@"; // vul hier je DB wachtwoord in
+    private static final String MYSQL_HOST = "jdbc:mysql://localhost:3306/big_five_safari?autoReconnect=" +
+            "true&serverTimezone=Europe/Amsterdam&useSSL=False";
+    //@todo : Don't use root user
+    private static final String MYSQL_USERNAME = "dbConn";
+     private static final String MYSQL_PASSWORD = "MySql15@";
 
     //Mongo NoSQL
     private static final String NOSQL_HOST = ""; // Vul hier je MongoDB gegevens in. Iets met mongodb+srv://......

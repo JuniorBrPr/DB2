@@ -34,7 +34,18 @@ public class MySQLReizigers extends MySQL<Reiziger> {
     private void load() {
 
         // Voer hier je SQL code in
-        String sql = "";
+        String sql = """
+                SELECT reiziger.reiziger_code as reizigerCode,
+                reiziger.voornaam,
+                reiziger.achternaam,
+                reiziger.adres,
+                reiziger.postcode,
+                reiziger.plaats,
+                reiziger.land,
+                CONCAT(r.voornaam, ' ', r.achternaam) as hoofdreiziger
+                FROM reiziger
+                    LEFT JOIN reiziger AS r on reiziger.hoofd_reiziger = r.reiziger_code;
+                """;
 
         // Als je nog geen query hebt ingevuld breek dan af om een error te voorkomen.
         if (sql.equals(""))
