@@ -4,6 +4,7 @@ import nl.hva.ict.models.Accommodatie;
 import nl.hva.ict.models.BoekingsOverzicht;
 import nl.hva.ict.models.Reiziger;
 import nl.hva.ict.models.Reservering;
+
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ import java.util.List;
 
 /**
  * DAO voor de accommodatie
+ *
  * @author HBO-ICT
  */
 public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
@@ -89,6 +91,7 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Haal de boekingen op voor 1 reiziger
+     *
      * @param reizigerscode Welke reiziger wil je de boekingen voor?
      * @return Een list van boekingen
      */
@@ -98,7 +101,29 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
         List<BoekingsOverzicht> reserveringVoor = new ArrayList<>();
 
         // Voer hier je query in
-        String sql = "";
+        String sql = """
+                SELECT
+                 r.id,
+                 r.aankomst_datum AS aankomstDatum,
+                 r.vertrek_datum AS vertrekDatum,
+                 r.betaald,
+                 r.accommodatie_code AS accommodatieCode,
+                 r.reiziger_code AS reizigerCode,
+                 re.voornaam,
+                 re.achternaam,
+                 re.plaats,
+                 a.naam,
+                 a.stad,
+                 a.land
+                FROM
+                 `reservering` AS r
+                INNER JOIN reiziger AS re ON
+                 r.reiziger_code = re.reiziger_code
+                INNER JOIN `accommodatie` AS a ON
+                 r.accommodatie_code = a.accommodatie_code
+                WHERE
+                 r.reiziger_code = ?
+                """;
 
 
         try {
@@ -154,14 +179,15 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Haal de reizigerscode op voor een bepaalde boeking per accommodate en datum
-     * @param pCode de accommodatecode
+     *
+     * @param pCode  de accommodatecode
      * @param pDatum de datum van verblijf
      * @return De reizigerscode
      */
     private String getReizigerscode(String pCode, LocalDate pDatum) {
-
-       // Voer hier je eigen query in
-        String sql = "";
+        String sql = """
+                SELECT GeboektOp(?, ?) AS reizigerCode;
+                """;
 
         // default waarde
         String reizigerCode = "";
@@ -195,7 +221,8 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Haal een lijst met reserveringen op voor een bepaalde boeking per accommodate en datum
-     * @param pCode de accommodate code
+     *
+     * @param pCode  de accommodate code
      * @param pDatum de datum van verblijf
      * @return Lijst met reserveringen
      */
@@ -214,14 +241,24 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
         if (reizigerscode != null) {
 
             // Haal alle reserveringen op
-            String sql = "";
+            String sql = """
+                    SELECT reiziger.voornaam,
+                    reiziger.achternaam,
+                    reiziger.adres,
+                    reiziger.postcode,
+                    reiziger.plaats,
+                    reiziger.land,
+                    CONCAT(reiziger.voornaam, ' ', reiziger.achternaam) AS hoofdreiziger
+                    FROM `reiziger`
+                    WHERE reiziger.reiziger_code = ?
+                    """;
 
             // Als je nog geen query hebt ingevuld breek dan af om een error te voorkomen.
             if (sql.equals(""))
                 return geboektOp;
 
             try {
-                // Roep de methode aan in de parent class en geen je SQL door
+                // Roep de methode aan in de parent class en geef je SQL door
                 PreparedStatement ps = getStatement(sql);
 
                 // vervang de eerste vraagteken met de reizigerscode
@@ -253,6 +290,7 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Haal alle boekingen op door de gehele arraylist terug te geven
+     *
      * @return Een arraylist van accommodaties
      */
     @Override
@@ -262,6 +300,7 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Haal 1 boeking op
+     *
      * @return Een arraylist van accommodaties
      */
     @Override
@@ -272,6 +311,7 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Voeg een boeking toe
+     *
      * @param boekingsOverzicht de boeking
      */
     @Override
@@ -281,6 +321,7 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Update de boeking
+     *
      * @param boekingsOverzicht de boeking
      */
     @Override
@@ -291,6 +332,7 @@ public class MySQLBoekingsOverzicht extends MySQL<BoekingsOverzicht> {
 
     /**
      * Verwijder een boeking
+     *
      * @param object de boeking
      */
     @Override
